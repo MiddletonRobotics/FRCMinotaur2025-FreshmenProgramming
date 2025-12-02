@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -25,36 +27,12 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
 
-  private WPI_TalonSRX leftFront;
-  private WPI_TalonSRX rightFront;
-  private WPI_TalonSRX leftRear;
-  private WPI_TalonSRX rightRear;
-
-  private DifferentialDrive drivetrain;
+   private Drivetrain drivetrain;
 
   private XboxController driverController;
 
   public Robot() {
-    leftFront = new WPI_TalonSRX(1);
-    rightFront = new WPI_TalonSRX(2);
-    leftRear = new WPI_TalonSRX(3);
-    rightRear = new WPI_TalonSRX(4);
-
-    leftFront.setInverted(true);
-    leftRear.setInverted(true);
-    rightFront.setInverted(false);
-    rightRear.setInverted(false);
-
-    leftFront.setNeutralMode(NeutralMode.Brake);
-    leftRear.setNeutralMode(NeutralMode.Brake);
-    rightFront.setNeutralMode(NeutralMode.Brake);
-    rightRear.setNeutralMode(NeutralMode.Brake);
-
-    leftRear.follow(leftFront);
-    rightRear.follow(rightFront);
-
-    drivetrain = new DifferentialDrive(leftFront, rightFront);
-    drivetrain.setSafetyEnabled(true);
+    drivetrain = new Drivetrain();
 
     driverController = new XboxController(0);
   }
@@ -73,7 +51,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    drivetrain.arcadeDrive(driverController.getLeftY(), driverController.getLeftX());
+    drivetrain.drive(driverController.getLeftY(), driverController.getRightX());
   }
 
   @Override
