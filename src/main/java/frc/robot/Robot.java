@@ -14,7 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -27,18 +27,16 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
 
-   private Drivetrain drivetrain;
-
-  private XboxController driverController;
+   private RobotContainer robotContainer;
 
   public Robot() {
-    drivetrain = new Drivetrain();
-
-    driverController = new XboxController(0);
+    robotContainer = new RobotContainer();
   }
 
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
 
   @Override
   public void autonomousInit() {}
@@ -50,9 +48,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {}
 
   @Override
-  public void teleopPeriodic() {
-    drivetrain.drive(driverController.getLeftY(), driverController.getRightX());
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void disabledInit() {}
@@ -61,7 +57,9 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   @Override
-  public void testInit() {}
+  public void testInit() {
+    CommandScheduler.getInstance().cancelAll();
+  }
 
   @Override
   public void testPeriodic() {}
