@@ -125,9 +125,6 @@ public class Elevator extends SubsystemBase {
         );
 
         elevatorLeaderTempuratureFault.set(elevatorLeadTempurature.getValue().in(Celsius) > 85);
-
-        SmartDashboard.putNumber("Elevator Current Position", getPosition());
-        SmartDashboard.putNumber("Elevator Setpoint Postion", elevatorSetpoint);
     }
 
     public double getPosition() {
