@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Celsius;
 import static edu.wpi.first.units.Units.Rotations;
 
+import java.util.Map;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -18,13 +20,21 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
@@ -49,7 +59,12 @@ public class Elevator extends SubsystemBase {
     private double elevatorSprocketDiameter = (16 * 0.25) / Math.PI;
 
     private Alert elevatorLeaderTempuratureFault;
+    private ShuffleboardTab loggingTab;
+    private ShuffleboardLayout elevatorLayout;
 
+    private GenericEntry positionEntry;
+    private GenericEntry speedEntry;
+    
     public Elevator() {
         elevatorLeader = new TalonFX(15, "*");
         elevatorFollower = new TalonFX(16, "*");
@@ -111,6 +126,19 @@ public class Elevator extends SubsystemBase {
             elevatorLeadTempurature,
             elevatorFollowerTempurature
         );
+
+        loggingTab = Shuffleboard.getTab("Logging Tab");
+        elevatorLayout = loggingTab.getLayout("Elevator", BuiltInLayouts.kList)
+            .withSize(2, 4);
+
+        elevatorLayout.add(new InstantCommand());
+
+        positionEntry = loggingTab.add("Elevator Position", 0).getEntry();
+        speedEntry = loggingTab
+            .add("Elevator Maximum Speed", 1)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("Minimum", 0, "Maximum", 1))
+            .getEntry();
     }
 
     @Override
@@ -123,6 +151,8 @@ public class Elevator extends SubsystemBase {
             elevatorLeadTempurature,
             elevatorFollowerTempurature
         );
+
+        //SmartDashboard.putNumber("Elevator Current Position", getPosition());
 
         elevatorLeaderTempuratureFault.set(elevatorLeadTempurature.getValue().in(Celsius) > 85);
     }

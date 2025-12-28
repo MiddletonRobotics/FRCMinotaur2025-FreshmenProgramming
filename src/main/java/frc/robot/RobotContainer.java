@@ -4,8 +4,6 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,8 +33,6 @@ public class RobotContainer {
 
         driverController = new CommandXboxController(0);
         operatorController = new CommandXboxController(1);
-
-        autoChooser = AutoBuilder.buildAutoChooser();
 
         RobotController.setBrownoutVoltage(6.5);
         configureButtonBindings();
