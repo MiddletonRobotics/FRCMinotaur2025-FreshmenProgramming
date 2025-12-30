@@ -4,11 +4,20 @@
 
 package frc.robot;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -27,10 +36,40 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
 
+   //Thread cameraThread;
+
    private RobotContainer robotContainer;
 
   public Robot() {
     robotContainer = new RobotContainer();
+
+    /* 
+    cameraThread = new Thread(() -> {
+      UsbCamera camera = CameraServer.startAutomaticCapture();
+      camera.setResolution(640, 480);
+      camera.setBrightness(30);
+      camera.setFPS(30);
+
+      CvSink cvSink = CameraServer.getVideo();
+      CvSource cvSource = CameraServer.putVideo("Box", 640, 480);
+
+      Mat mat = new Mat();
+
+      while(!Thread.interrupted()) {
+        if(cvSink.grabFrame(mat) == 0) {
+          cvSource.notifyError(cvSink.getError());
+          continue;
+        }
+
+        Imgproc.rectangle(mat, new Point(0,0), new Point(640 / 2, 480 / 2), new Scalar(255, 255, 255), 5);
+        cvSource.putFrame(mat);
+      }
+    });
+
+    cameraThread.setDaemon(true);
+    cameraThread.start();
+
+    */
   }
 
   @Override
